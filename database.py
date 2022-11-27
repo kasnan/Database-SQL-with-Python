@@ -11,6 +11,14 @@ class Db_:
         Db_.cursor.execute('select * from 고객')
         for row in Db_.cursor.fetchall():
             print(row)
+    
+    def ExecQuery(self, query):
+        Db_.cursor.execute(query)
+        for row in Db_.cursor.fetchall():
+            print(row)
 
+    def FetchQuery(self, query):
+        Db_.cursor.execute(query)
+        return Db_.cursor.fetchall()
 
 

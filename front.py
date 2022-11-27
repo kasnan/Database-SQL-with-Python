@@ -1,13 +1,24 @@
 import tkinter
+
+from window import Window
 from database import Db_
 
 
-window=tkinter.Tk()
-window.mainloop()
-
-
-'''
-Database class를 선언해서 해당 데이터베이스 파일을 조회하도록 한다.
+#access database(.accdb) file
 db1 = Db_('db1.accdb')
-db1.testquery()
-'''
+
+#w1 = Window("Main Window")
+w2 = Window("customer list")
+w2.AddTextBox(15)
+w2.AddButton("확인","blue","white")
+w2.AddDB(db1)
+w2.AddTreeView()
+
+w2.Popwindow()
+
+
+
+
+
+
+
