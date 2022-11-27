@@ -1,12 +1,13 @@
 import tkinter
-import pyodbc
+from database import Db_
 
-conn = pyodbc.connect(r'Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=C:/Users/kasna/Documents/workspace/py/PYgui/db1.accdb;')
-cursor = conn.cursor()
-cursor.execute('select * from 고객')
-
-for row in cursor.fetchall():
-    print (row)
 
 window=tkinter.Tk()
 window.mainloop()
+
+
+'''
+Database class를 선언해서 해당 데이터베이스 파일을 조회하도록 한다.
+db1 = Db_('db1.accdb')
+db1.testquery()
+'''
