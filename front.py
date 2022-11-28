@@ -8,7 +8,7 @@ from database import Db_
 db1 = Db_('db1.accdb')
 
 #create window object
-w1 = Window("Main Window")
+# w1 = Window("Main Window")
 w2 = Window("customer list")
 
 
