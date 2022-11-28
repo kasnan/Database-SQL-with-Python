@@ -3,9 +3,9 @@ import pyodbc
 class Db_:
     
     def __init__(self,filename):
-        #path_laptop='C:/Users/kasna/Documents/vsworkspace/Pyworkspace/pyodbc-database-with-graphic/'
-        path_desktop='C:/Users/kasna/Documents/workspace/py/pyodbc-database-with-graphic/'
-        Db_.conn=pyodbc.connect(r'Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ='+path_desktop+filename+';')
+        path_laptop='C:/Users/kasna/Documents/vsworkspace/Pyworkspace/pyodbc-database-with-graphic/'
+        #path_desktop='C:/Users/kasna/Documents/workspace/py/pyodbc-database-with-graphic/'
+        Db_.conn=pyodbc.connect(r'Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ='+path_laptop+filename+';')
         Db_.cursor = Db_.conn.cursor()
     
     def testquery(self):
@@ -25,5 +25,9 @@ class Db_:
     def QueryResult(self, query):
         Db_.cursor.execute(query)
         
+    def GetColumns(self):
+        Db_.columns = [column[0] for column 
+            in Db_.cursor.description]
+        return Db_.columns
 
 

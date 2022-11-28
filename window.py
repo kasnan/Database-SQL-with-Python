@@ -9,6 +9,7 @@ class Window:
         Window.window_.geometry("640x480+100+100")
         Window.window_.resizable=(False, False)
         Window.in_text = ""
+        Window.table_tog = 0
     
     def AddDB(self, db):
         Window.db = db
@@ -52,7 +53,7 @@ class Window:
         Window.ClearTable(Window.tableView)
         Window.SetTreeView(Fetchresult=Window.FetchResult)
 
-        
+
 
     def Return_intext():
         return Window.in_text    
