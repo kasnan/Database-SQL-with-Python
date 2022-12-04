@@ -3,6 +3,9 @@ import tkinter.ttk
 from database import Db_
 
 class Window:
+    col_index=0
+    row_index=0
+
     def __init__(self, title):
         Window.window_ = tkinter.Tk()
         Window.window_.title(title)
