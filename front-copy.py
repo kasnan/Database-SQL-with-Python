@@ -42,7 +42,7 @@ scrollbar = Scrollbar(frame_w1)
 scrollbar.pack(sid="right", fill="both")
 
 
-
+#for listbox
 def onselect(evt):
     for row in tableView.get_children():
         tableView.delete(row)
@@ -59,6 +59,26 @@ def onselect(evt):
         tableView.heading(columns[col],text=columns[col],anchor="center")
     for i in range(len(Fetchresult)):
             tableView.insert("","end",text="",values=Fetchresult[i],iid=i)
+
+#for listTree
+# def onselect(evt):
+#     for row in tableView.get_children():
+#         tableView.delete(row)
+#     w = evt.widget
+#     index = int(w.selection())
+#     print(index)
+#     value = w.get(index)
+#     Fetchresult = db1.FetchQuery("select * from "+value)
+
+#     columns = db1.GetColumns()
+#     print(columns)
+#     tableView.config(column=columns,displaycolumns=columns)
+#     for col in range(len(columns)):
+#         tableView.column(columns[col],width=100,anchor="center")
+#         tableView.heading(columns[col],text=columns[col],anchor="center")
+#     for i in range(len(Fetchresult)):
+#             tableView.insert("","end",text="",values=Fetchresult[i],iid=i)
+
 
     # tog_pressed(evt)
 global tableView
@@ -80,7 +100,14 @@ list.pack(side="left", fill="both")
 
 scrollbar.config(command=list.yview)
 
+# listtree = tkinter.ttk.Treeview(frame_w1, height=10,
+#      yscrollcommand=scrollbar.set)
+# for line in range(len(db_list)):
+#     listtree.insert('',line,text=db_list[line])
+# listtree.bind('<ButtonRelease-1>', onselect)
+# listtree.pack(side="left", fill="both")
 
+# scrollbar.config(command=listtree.yview)
 
 
 #table for w2
