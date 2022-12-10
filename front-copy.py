@@ -7,7 +7,7 @@ global columns
 global tableView
 global tv1
 global db_list
-global tableView
+global Fetchresult
 
 def onselect(event):
     print("callback")
@@ -17,18 +17,23 @@ def onselect(event):
     selected_iid = tv1.focus()
     item_index = tv1.item(selected_iid)
     value = item_index.get('values')[0]
-    print(value)
     
     Fetchresult = db1.FetchQuery("select * from "+value)
     columns = db1.GetColumns()
     print(columns)
 
     tableView.config(column=columns,displaycolumns=columns)
+    # table data display configuration
     for col in range(len(columns)):
         tableView.column(columns[col],width=100,anchor="center")
         tableView.heading(columns[col],text=columns[col],anchor="center")
+    # input table data
     for i in range(len(Fetchresult)):
-            tableView.insert("","end",text="",values=Fetchresult[i],iid=i)
+        tableView.insert("","end",text="",values=Fetchresult[i],iid=i)
+
+def addlowerMenu(upper_tree, text):
+    tv1.insert(upper_tree,"end",text=text,values=text,tag=upper_tree+"_"+text)
+
 
 
 #access database(.accdb) file and test it
@@ -51,26 +56,6 @@ scrollbar = Scrollbar(frame_w1)
 scrollbar.pack(sid="right", fill="both")
 
 
-
-def onselect(evt):
-    for row in tableView.get_children():
-        tableView.delete(row)
-    w = evt.widget
-    index = int(w.curselection()[0])
-    value = w.get(index)
-    Fetchresult = db1.FetchQuery("select * from "+value)
-
-    columns = db1.GetColumns()
-    print(columns)
-    tableView.config(column=columns,displaycolumns=columns)
-    for col in range(len(columns)):
-        tableView.column(columns[col],width=100,anchor="center")
-        tableView.heading(columns[col],text=columns[col],anchor="center")
-    for i in range(len(Fetchresult)):
-            tableView.insert("","end",text="",values=Fetchresult[i],iid=i)
-
-    # tog_pressed(evt)
-
 tableView = tkinter.ttk.Treeview(frame_w1_2,
             height=10,
             column=["id","customer"],
@@ -81,8 +66,7 @@ db_list = ["customer_sign","customer_list","account","account_list",
             "withdraw","portfolio","dailygain","dailygain"]
 
 
-def addlowerMenu(upper_tree, text):
-    tv1.insert(upper_tree,"end",text=text,values=text,tag=upper_tree+"_"+text)
+
 
 tv1 = tkinter.ttk.Treeview(frame_w1, height=10, yscrollcommand=scrollbar.set)
 
@@ -103,13 +87,21 @@ addlowerMenu(port_tree,"portfolio")
 
 addlowerMenu(info_tree,"dailygain")
 
-# listtree = tkinter.ttk.Treeview(frame_w1, height=10,
-#      yscrollcommand=scrollbar.set)
-# for line in range(len(db_list)):
-#     listtree.insert('',line,text=db_list[line])
-# listtree.bind('<ButtonRelease-1>', onselect)
-# listtree.pack(side="left", fill="both")
 
+# for line in range(len(db_list)):
+#     tv1.insert(info_tree,"end",text=db_list[line],values=db_list[line],tag="tag1")
+#tv1.tag_bind("tag1","<<TreeviewSelect>>", callback=onselect)
+tv1.bind("<Double-1>",onselect)
+tv1.pack(side="left", fill="both")
+scrollbar.config(command=tv1.yview)
+
+# list = Listbox(frame_w1, height=10,yscrollcommand=scrollbar.set)
+# for line in range(len(db_list)):
+#     list.insert(END, db_list[line])
+#     list.activate(line)
+# list.bind('<<ListboxSelect>>', onselect)
+# list.pack(side="left", fill="both")
+# scrollbar.config(command=list.yview)
 
 
 #table for w2
