@@ -3,8 +3,10 @@ import pyodbc
 class Db_:
     
     def __init__(self,filename):
-        path='C:/Users/kasna/Documents/vsworkspace/Pyworkspace/pyodbc-database-with-graphic/'
-        # path='C:/Users/kasna/Documents/workspace/py/pyodbc-database-with-graphic/'
+        #path for laptop
+        #path='C:/Users/kasna/Documents/vsworkspace/Pyworkspace/pyodbc-database-with-graphic/'
+        #path for desktop
+        path='C:/Users/kasna/Documents/workspace/py/pyodbc-database-with-graphic/'
         Db_.conn=pyodbc.connect(r'Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ='+path+filename+';')
         Db_.cursor = Db_.conn.cursor()
     
