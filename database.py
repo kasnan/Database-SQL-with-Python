@@ -17,8 +17,6 @@ class Db_:
     
     def ExecQuery(self, query):
         Db_.cursor.execute(query)
-        for row in Db_.cursor.fetchall():
-            print(row)
 
     def FetchQuery(self, query):
         Db_.cursor.execute(query)
@@ -31,5 +29,8 @@ class Db_:
         Db_.columns = [column[0] for column 
             in Db_.cursor.description]
         return Db_.columns
+    
+    def save(self):
+        self.conn.commit()
 
 

@@ -3,6 +3,8 @@ import tkinter.ttk
 
 from database import Db_
 
+import datetime
+
 global columns
 global tableView
 global tv1
@@ -57,48 +59,102 @@ def inputQuery():
 def subWindow(button):
     print("service for",button)
     w_tmp = Tk("PUSH AN ITEM")
-    w_tmp.title(button)
+    w_tmp.title(str(button))
     w_tmp.geometry("320x240")
     globals()["w_"+button](w_tmp,button)
-    
-def w_customer_sign(window,button):
-    
+
+def getBalance(textbox, frame,balance_txt,manual_text) :
+    name = textbox.get()
+    print(name)
+
+    id = str(db1.FetchQuery(f"select id from customer_sign where customer_name like '{name}';")[0][0])
+    balance = db1.FetchQuery(f"select balance from account_list where id = {id};")[0][0]
+    w_money = db1.FetchQuery(f"select amount from withdraw where id = {id};")
+    for i in range(len(w_money)):
+        balance -= w_money[i][0]
+
+    balance = str(balance)
+    balance_txt.config(text="총 가치 : "+balance+"원")
+    manual_text.config(text=name)
+
+
+def w_customer_list(window, button):
 
     f1 = Frame(window)
     f1.grid(column=0,row=0,columnspan=2)
-    manual_text = Label(f1, text="파이썬", width=10, height=1, fg="black", relief="solid")
-    manual_text.pack(side="top",fill="both")
-
     f2 = Frame(window)
     f2.grid(column=0,row=1,columnspan=2)
-
-
     f3 = Frame(window)
-    f1.grid(column=0,row=0,columnspan=2)
+    f3.grid(column=0,row=2)
+    f3_2 = Frame(window)
+    f3_2.grid(column=1,row=2)
+    manual_text = Label(f1, text="이름을 입력하세요", width=20, height=1, fg="black", relief="solid")
+    manual_text.pack(side="top",fill="both")
+    
+    textbox = Entry(f2,width=20)
+    textbox.pack(sid="left",fill="both")
+    textbox_but = Button(f2,text="입력",command=lambda: getBalance(textbox,f3,balance_txt,manual_text))
+    textbox_but.pack(sid="right",fill="both")
 
+    balance = "NULL"
+    balance_txt = Label(f3, text="총 가치 : "+balance+"원", width=20, height=1, fg="black")
+    balance_txt.pack(side="left",fill="both")
 
-    s1 = Scrollbar(f1)
-    s1.pack(side="bottom", fill="both")
-
-    tableView = tkinter.ttk.Treeview(f1,
-            height=10,
-            column=["id","customer"],
-            displaycolumns=["id","customer"],)
-    tableView.pack(sid="left",fill="both")
-    tableView["show"]="headings"
-    Fetchresult = db1.FetchQuery("select * from "+button)
-    columns = db1.GetColumns()
-
-    s1.config(orient="horizontal",command=tableView.xview)
-    tableView.config(column=columns,displaycolumns=columns)
-
-    for col in range(len(columns)):
-        tableView.column(columns[col],width=100,anchor="center")
-        tableView.heading(columns[col],text=columns[col],anchor="center")
-    for i in range(len(Fetchresult)):
-            tableView.insert("","end",text="",values=list(Fetchresult[i]),iid=i)
+    try_withdraw = Label(f3_2, text="출금하시겠습니까?", width=20, height=1, fg="black")
+    try_withdraw.pack(side="top",fill="both")
+    
+    try_withdraw_but = Button(f3_2,text="withdraw")
+    try_withdraw_but.config(command=lambda m=try_withdraw_but.cget('text'): subWindow(m))
+    
+    
+    try_withdraw_but.pack(sid="bottom",fill="both")
 
     window.mainloop()
+
+def withdrawMoney(textbox,textbox2,proc):
+    name = textbox.get()
+    print(name)
+
+    id = db1.FetchQuery(f"select id from customer_sign where customer_name like '{name}';")[0][0]
+    balance = db1.FetchQuery(f"select balance from account_list where id = {id};")[0][0]
+
+    w_money = db1.FetchQuery(f"select amount from withdraw where id = {id};")
+    for i in range(len(w_money)):
+        balance -= w_money[i][0]
+
+    money = int(textbox2.get())
+    print(money)
+    #id, amount, w_date
+    date = datetime.date.today().strftime("%Y-%m-%d") 
+    if money <= balance:
+        db1.ExecQuery(f"insert into withdraw(id, amount,w_date) values ({id}, {money}, '{date}')")
+        db1.save()
+        proc.pack(side="bottom",fill="both")
+
+    else:
+        print("error!")
+
+
+def w_withdraw(window, button):
+    f1 = Frame(window)
+    f1.grid(column=0,row=0,columnspan=2)
+    f2 = Frame(window)
+    f2.grid(column=0,row=1,columnspan=2)
+    f3 = Frame(window)
+    f3.grid(column=0,row=2,columnspan=2)
+    manual_text = Label(f1, text="이름과 출금액을 입력하세요", width=30, height=1, fg="black", relief="solid")
+    manual_text.pack(side="top",fill="both")
+
+    textbox = Entry(f2,width=10)
+    textbox.pack(sid="left",fill="both")
+
+    proc_text = Label(f3, text="작업이 완료되었습니다!", width=30, height=1, fg="black")
+    
+
+    textbox2 = Entry(f2,width=7)
+    textbox2.pack(sid="left",fill="both")
+    textbox_but2 = Button(f2,text="입력",command=lambda: withdrawMoney(textbox,textbox2,proc_text))
+    textbox_but2.pack(sid="right",fill="both")
 
 
 #access database(.accdb) file
@@ -106,10 +162,6 @@ db1 = Db_('db1.accdb')
 
 db_list = ["customer_sign","customer_list","account","account_list",
             "withdraw","portfolio","dailygain","dailygain_tot"]
-
-# s=tkinter.ttk.Style()
-# s.theme_use("clam")
-# s.configure("Treeview",rowheight=40)
 
 w1 = Tk("PUSH AN ITEM")
 w1.title("Control Panel")
