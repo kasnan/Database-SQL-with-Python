@@ -8,6 +8,7 @@ global tableView
 global tv1
 global db_list
 
+
 #tableViewer of database (for tag "lower")
 def onselect(event):
     for row in tableView.get_children():
@@ -55,12 +56,26 @@ def inputQuery():
 
 def subWindow(button):
     print("service for",button)
-
     w_tmp = Tk("PUSH AN ITEM")
     w_tmp.title(button)
     w_tmp.geometry("320x240")
-    f1 = Frame(w_tmp)
+    globals()["w_"+button](w_tmp,button)
+    
+def w_customer_sign(window,button):
+    
+
+    f1 = Frame(window)
     f1.grid(column=0,row=0,columnspan=2)
+    manual_text = Label(f1, text="파이썬", width=10, height=1, fg="black", relief="solid")
+    manual_text.pack(side="top",fill="both")
+
+    f2 = Frame(window)
+    f2.grid(column=0,row=1,columnspan=2)
+
+
+    f3 = Frame(window)
+    f1.grid(column=0,row=0,columnspan=2)
+
 
     s1 = Scrollbar(f1)
     s1.pack(side="bottom", fill="both")
@@ -83,11 +98,14 @@ def subWindow(button):
     for i in range(len(Fetchresult)):
             tableView.insert("","end",text="",values=list(Fetchresult[i]),iid=i)
 
-    w_tmp.mainloop()
-    
+    window.mainloop()
 
-#access database(.accdb) file and test it
+
+#access database(.accdb) file
 db1 = Db_('db1.accdb')
+
+db_list = ["customer_sign","customer_list","account","account_list",
+            "withdraw","portfolio","dailygain","dailygain_tot"]
 
 # s=tkinter.ttk.Style()
 # s.theme_use("clam")
@@ -95,7 +113,9 @@ db1 = Db_('db1.accdb')
 
 w1 = Tk("PUSH AN ITEM")
 w1.title("Control Panel")
-w1.geometry("480x480")
+w1.geometry("640x480")
+w1.resizable(False,False)
+
 frame_w1=Frame(w1)
 frame_w1.grid(column=0,row=0)
 frame_w1_2 = Frame(w1)
@@ -117,9 +137,6 @@ tableView = tkinter.ttk.Treeview(frame_w1_2,
             displaycolumns=["id","customer"])
 tableView.pack(side="left",fill="both")
 tableView["show"]="headings"
-db_list = ["customer_sign","customer_list","account","account_list",
-            "withdraw","portfolio","dailygain","dailygain_tot"]
-
 
 def addlowerMenu(upper_tree, text):
     tv1.insert(upper_tree,"end",text=text,values=text,tag="lower")
