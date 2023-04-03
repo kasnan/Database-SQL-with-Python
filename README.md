@@ -1,4 +1,2 @@
 # python work with database
-add some gui to see it
-
-## maybe i can add some input to execute quary
+python을 통해 ui 상에서 database 테이블을 조회하고 수정
